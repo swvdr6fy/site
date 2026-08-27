@@ -1,0 +1,32 @@
+<%- include('../partials/header') %>
+
+<h1 class="page-title" style="margin-bottom:20px;">مدیریت سفارش‌ها</h1>
+<%- include('_tabs', { active: 'orders' }) %>
+
+<div class="cat-chips">
+  <a href="/admin/orders" class="cat-chip <%= !activeStatus ? 'active' : '' %>">همه</a>
+  <% statuses.forEach(s => { %>
+    <a href="/admin/orders?status=<%= encodeURIComponent(s) %>" class="cat-chip <%= activeStatus === s ? 'active' : '' %>"><%= s %></a>
+  <% }) %>
+</div>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>شماره</th><th>مشتری</th><th>مبلغ</th><th>وضعیت</th><th>کد پیگیری</th><th>تاریخ</th><th></th></tr></thead>
+    <tbody>
+      <% orders.forEach(o => { %>
+        <tr>
+          <td>#<%= o.id %></td>
+          <td><%= o.user_name %></td>
+          <td><%= o.total_price.toLocaleString('fa-IR') %></td>
+          <td><span class="badge badge-<%= o.status === 'در انتظار پرداخت' ? 'awaiting' : o.status === 'در انتظار تایید پرداخت' ? 'pending' : o.status === 'پرداخت تایید شد' ? 'confirmed' : o.status === 'در حال پردازش' ? 'processing' : o.status === 'ارسال شد' ? 'shipped' : o.status === 'تحویل داده شد' ? 'delivered' : 'rejected' %>"><%= o.status %></span></td>
+          <td><%= o.tracking_code || '-' %></td>
+          <td><%= o.created_at %></td>
+          <td><a href="/admin/orders/<%= o.id %>" class="btn btn-outline btn-sm">مدیریت</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/footer') %>

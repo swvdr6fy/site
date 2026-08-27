@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+
+<div class="auth-wrap">
+  <div class="form-card glass-card reveal">
+    <div class="form-title">ساخت حساب کاربری</div>
+    <div class="form-sub">برای خرید و پیگیری سفارش‌ها ثبت‌نام کنید. شماره موبایل فقط همین یک‌بار لازم است؛ دفعات بعد با نام کاربری وارد می‌شوید.</div>
+
+    <% if (error) { %><div class="flash flash-error"><%= error %></div><% } %>
+
+    <form action="/register" method="POST" novalidate>
+      <div class="form-group">
+        <label>نام و نام خانوادگی</label>
+        <input type="text" name="name" required value="<%= old.name || '' %>" placeholder="مثلا: علی محمدی">
+      </div>
+      <div class="form-group">
+        <label>نام کاربری</label>
+        <input type="text" name="username" dir="ltr" required value="<%= old.username || '' %>" placeholder="مثلا: ali_m" pattern="[a-zA-Z0-9_.]{3,20}">
+        <p class="form-hint">۳ تا ۲۰ کاراکتر، فقط حروف انگلیسی، عدد، نقطه و آندرلاین. دفعات بعد برای ورود از همین نام کاربری استفاده می‌کنید.</p>
+      </div>
+      <div class="form-group">
+        <label>شماره موبایل</label>
+        <input type="tel" name="phone" dir="ltr" required value="<%= old.phone || '' %>" placeholder="09xxxxxxxxx">
+        <p class="form-hint">فقط همین یک‌بار برای تایید هویت و پیگیری سفارش لازم است.</p>
+      </div>
+      <div class="form-group">
+        <label>ایمیل (اختیاری)</label>
+        <input type="email" name="email" dir="ltr" value="<%= old.email || '' %>">
+      </div>
+      <div class="form-group">
+        <label>رمز عبور</label>
+        <input type="password" name="password" required minlength="6">
+      </div>
+      <div class="form-group">
+        <label>تکرار رمز عبور</label>
+        <input type="password" name="password2" required minlength="6">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">ثبت‌نام</button>
+    </form>
+
+    <div class="form-footer-link">
+      قبلا ثبت‌نام کرده‌اید؟ <a href="/login" class="link-accent">وارد شوید</a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

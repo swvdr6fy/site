@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+
+<h1 class="page-title" style="margin-bottom:14px; text-align:center;">پرداخت سفارش #<%= order.id %></h1>
+
+<div class="steps">
+  <div class="step done"><span class="step-dot">✓</span> اطلاعات گیرنده</div>
+  <div class="step-sep"></div>
+  <div class="step active"><span class="step-dot">۲</span> پرداخت</div>
+  <div class="step-sep"></div>
+  <div class="step"><span class="step-dot">۳</span> ثبت رسید</div>
+</div>
+
+<div class="pay-amount-box">
+  <div class="label">مبلغ قابل پرداخت</div>
+  <div class="value"><%= order.total_price.toLocaleString('fa-IR') %> تومان</div>
+</div>
+
+<div class="pay-card">
+  <div class="pay-card-label">💳 شماره کارت مقصد</div>
+  <div class="pay-card-number" id="cardNumberText"><%= cardNumber %></div>
+  <div class="pay-card-holder">به نام: <%= cardHolder %><% if (cardBank) { %> - <%= cardBank %><% } %></div>
+  <button type="button" class="copy-btn" id="copyBtn" onclick="copyCardNumber()">
+    <span id="copyIcon">📋</span> <span id="copyText">کپی شماره کارت</span>
+  </button>
+</div>
+
+<div style="max-width:420px; margin: 0 auto;">
+  <p class="form-hint" style="text-align:center; margin-bottom:20px;">
+    مبلغ بالا را به شماره کارت واریز کنید، سپس روی دکمه زیر بزنید تا رسید پرداخت را آپلود کنید.
+  </p>
+  <a href="/checkout/receipt/<%= order.id %>" class="btn btn-primary btn-block">✅ پرداخت کردم</a>
+</div>
+
+<script>
+function copyCardNumber() {
+  const raw = "<%= cardNumber.replace(/[^0-9]/g, '') %>";
+  navigator.clipboard.writeText(raw).then(() => {
+    const btn = document.getElementById('copyBtn');
+    document.getElementById('copyText').textContent = 'کپی شد!';
+    document.getElementById('copyIcon').textContent = '✅';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      document.getElementById('copyText').textContent = 'کپی شماره کارت';
+      document.getElementById('copyIcon').textContent = '📋';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,28 @@
+<%- include('partials/header') %>
+
+<div class="auth-wrap">
+  <div class="form-card glass-card reveal">
+    <div class="form-title">ورود به حساب کاربری</div>
+    <div class="form-sub">با نام کاربری و رمز عبور خود وارد شوید.</div>
+
+    <% if (error) { %><div class="flash flash-error"><%= error %></div><% } %>
+
+    <form action="/login" method="POST">
+      <div class="form-group">
+        <label>نام کاربری</label>
+        <input type="text" name="username" dir="ltr" required value="<%= old.username || '' %>" autofocus>
+      </div>
+      <div class="form-group">
+        <label>رمز عبور</label>
+        <input type="password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">ورود</button>
+    </form>
+
+    <div class="form-footer-link">
+      حساب کاربری ندارید؟ <a href="/register" class="link-accent">ثبت‌نام کنید</a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

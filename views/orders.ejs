@@ -1,0 +1,33 @@
+<%- include('partials/header') %>
+
+<h1 class="page-title reveal" style="margin-bottom:20px;"><svg class="icon"><use href="#i-package"/></svg> سفارش‌های من</h1>
+
+<% if (orders.length === 0) { %>
+  <div class="empty-state reveal">
+    <div class="empty-icon"><svg class="icon"><use href="#i-package"/></svg></div>
+    <p>هنوز سفارشی ثبت نکرده‌اید.</p>
+    <a href="/" class="btn btn-primary" style="margin-top:14px;">مشاهده محصولات</a>
+  </div>
+<% } else { %>
+  <div class="table-wrap reveal">
+    <table class="data-table">
+      <thead>
+        <tr><th>شماره سفارش</th><th>تاریخ</th><th>مبلغ</th><th>وضعیت</th><th>کد پیگیری</th><th></th></tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(o => { %>
+          <tr>
+            <td>#<%= o.id %></td>
+            <td><%= o.created_at %></td>
+            <td><%= o.total_price.toLocaleString('fa-IR') %> تومان</td>
+            <td><span class="badge badge-<%= o.status === 'در انتظار پرداخت' ? 'awaiting' : o.status === 'در انتظار تایید پرداخت' ? 'pending' : o.status === 'پرداخت تایید شد' ? 'confirmed' : o.status === 'در حال پردازش' ? 'processing' : o.status === 'ارسال شد' ? 'shipped' : o.status === 'تحویل داده شد' ? 'delivered' : 'rejected' %>"><%= o.status %></span></td>
+            <td><%= o.tracking_code || '-' %></td>
+            <td><a href="/orders/<%= o.id %>" class="btn btn-outline btn-sm">جزئیات</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>

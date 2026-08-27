@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1 class="page-title">مدیریت محصولات</h1>
+  <a href="/admin/products/new" class="btn btn-primary">+ افزودن محصول</a>
+</div>
+<%- include('_tabs', { active: 'products' }) %>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr><th></th><th>عنوان</th><th>دسته‌بندی</th><th>قیمت</th><th>موجودی</th><th>وضعیت</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% products.forEach(p => { %>
+        <tr>
+          <td>
+            <% if (p.image) { %><img src="/uploads/products/<%= p.image %>" class="thumb-sm"><% } else { %><span class="thumb-sm" style="display:inline-flex;align-items:center;justify-content:center;"><svg class="icon"><use href="#i-shield"/></svg></span><% } %>
+          </td>
+          <td><%= p.title %></td>
+          <td><%= p.category_name || '-' %></td>
+          <td>
+            <%= p.price.toLocaleString('fa-IR') %> تومان
+            <% if (p.variantCount > 0) { %><br><span class="form-hint"><%= p.variantCount %> پلن</span><% } %>
+          </td>
+          <td><%= p.stock %></td>
+          <td>
+            <% if (p.is_active) { %><span class="badge badge-delivered">فعال</span><% } else { %><span class="badge badge-rejected">غیرفعال</span><% } %>
+          </td>
+          <td style="display:flex; gap:6px;">
+            <a href="/admin/products/<%= p.id %>/edit" class="btn btn-outline btn-sm">ویرایش</a>
+            <form action="/admin/products/<%= p.id %>/delete" method="POST" onsubmit="return confirm('آیا از حذف این محصول مطمئن هستید؟');">
+              <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/footer') %>

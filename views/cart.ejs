@@ -1,0 +1,68 @@
+<%- include('partials/header') %>
+
+<h1 class="page-title reveal" style="margin-bottom:22px;"><svg class="icon"><use href="#i-cart"/></svg> سبد خرید</h1>
+
+<% if (items.length === 0) { %>
+  <div class="empty-state reveal">
+    <div class="empty-icon"><svg class="icon"><use href="#i-cart"/></svg></div>
+    <p>سبد خرید شما خالی است.</p>
+    <a href="/" class="btn btn-primary" style="margin-top:14px;">مشاهده محصولات</a>
+  </div>
+<% } else { %>
+  <div class="table-wrap reveal">
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>محصول</th>
+          <th>قیمت واحد</th>
+          <th>تعداد</th>
+          <th>جمع</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(item => { %>
+          <tr>
+            <td data-label="محصول">
+              <div style="display:flex; align-items:center;">
+                <div class="cart-row-thumb">
+                  <% if (item.image) { %>
+                    <img src="/uploads/products/<%= item.image %>" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                  <% } else { %>
+                    <div class="poster poster-v<%= (item.productId % 6) + 1 %>" style="width:100%;height:100%;aspect-ratio:auto;padding:0;align-items:center;justify-content:center;">
+                      <svg class="icon" style="width:22px;height:22px;position:relative;z-index:2;"><use href="#i-shield"/></svg>
+                    </div>
+                  <% } %>
+                </div>
+                <div>
+                  <a href="/product/<%= item.slug %>"><%= item.title %></a>
+                  <% if (item.variantLabel) { %><div style="font-size:12px; color:var(--text-dim); margin-top:2px;"><%= item.variantLabel %></div><% } %>
+                </div>
+              </div>
+            </td>
+            <td data-label="قیمت واحد"><%= item.price.toLocaleString('fa-IR') %> تومان</td>
+            <td data-label="تعداد">
+              <form action="/cart/update" method="POST" style="display:flex; gap:6px;">
+                <input type="hidden" name="cart_key" value="<%= item.key %>">
+                <input type="number" name="quantity" value="<%= item.quantity %>" min="1" class="qty-input" style="padding:8px;">
+                <button type="submit" class="btn btn-outline btn-sm">به‌روزرسانی</button>
+              </form>
+            </td>
+            <td data-label="جمع"><%= (item.price * item.quantity).toLocaleString('fa-IR') %> تومان</td>
+            <td data-label="">
+              <form action="/cart/remove" method="POST">
+                <input type="hidden" name="cart_key" value="<%= item.key %>">
+                <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cart-total reveal">جمع کل: <%= total.toLocaleString('fa-IR') %> تومان</div>
+  <a href="/checkout" class="btn btn-primary btn-lg reveal">ادامه فرآیند خرید ←</a>
+<% } %>
+
+<%- include('partials/footer') %>

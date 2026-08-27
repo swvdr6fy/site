@@ -1,0 +1,61 @@
+<%- include('partials/header') %>
+
+<h1 class="page-title reveal" style="margin-bottom:14px;">تکمیل خرید</h1>
+
+<div class="steps reveal">
+  <div class="step active"><span class="step-dot">۱</span> اطلاعات گیرنده</div>
+  <div class="step-sep"></div>
+  <div class="step"><span class="step-dot">۲</span> پرداخت</div>
+  <div class="step-sep"></div>
+  <div class="step"><span class="step-dot">۳</span> ثبت رسید</div>
+</div>
+
+<div class="checkout-grid">
+  <div class="reveal">
+    <% if (error) { %><div class="flash flash-error"><%= error %></div><% } %>
+
+    <form action="/checkout" method="POST" class="form-card" style="max-width:none;">
+      <div class="form-group">
+        <label>نام و نام خانوادگی گیرنده</label>
+        <input type="text" name="full_name" required value="<%= currentUser ? currentUser.name : '' %>">
+      </div>
+      <div class="form-group">
+        <label>شماره موبایل</label>
+        <input type="tel" name="phone" dir="ltr" required value="<%= currentUser ? currentUser.phone : '' %>">
+      </div>
+      <div class="form-group">
+        <label>کد پستی <%= needsShipping ? '' : '(اختیاری)' %></label>
+        <input type="text" name="postal_code" dir="ltr" inputmode="numeric" placeholder="مثلا: 1234567890" <%= needsShipping ? 'required' : '' %>>
+      </div>
+      <div class="form-group">
+        <label>استان <%= needsShipping ? '' : '(اختیاری)' %></label>
+        <input type="text" name="province" placeholder="مثلا: تهران" <%= needsShipping ? 'required' : '' %>>
+      </div>
+      <div class="form-group">
+        <label>شهر <%= needsShipping ? '' : '(اختیاری)' %></label>
+        <input type="text" name="city" placeholder="مثلا: تهران" <%= needsShipping ? 'required' : '' %>>
+      </div>
+      <div class="form-group">
+        <label>آدرس دقیق <%= needsShipping ? '' : '(اختیاری)' %></label>
+        <textarea name="address" placeholder="خیابان، کوچه، پلاک، واحد..." <%= needsShipping ? 'required' : '' %>></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">ثبت سفارش و رفتن به صفحه پرداخت</button>
+    </form>
+  </div>
+
+  <div class="summary-box reveal">
+    <h3 style="margin-top:0;">خلاصه سفارش</h3>
+    <% items.forEach(item => { %>
+      <div class="summary-row">
+        <span>
+          <%= item.title %> × <%= item.quantity %>
+          <% if (item.variantLabel) { %><br><span style="font-size:12px; color:var(--text-dim);"><%= item.variantLabel %></span><% } %>
+        </span>
+        <span><%= (item.price * item.quantity).toLocaleString('fa-IR') %></span>
+      </div>
+    <% }) %>
+    <div class="cart-total" style="margin-top:18px;">جمع کل: <%= total.toLocaleString('fa-IR') %> تومان</div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

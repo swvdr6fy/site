@@ -1,0 +1,85 @@
+<%- include('partials/header') %>
+
+<div class="product-detail reveal">
+  <div class="pd-image">
+    <% if (product.is_featured) { %>
+      <div class="product-badges"><span class="p-badge p-badge-featured"><svg class="icon"><use href="#i-bolt"/></svg> ویژه</span></div>
+    <% } %>
+    <div class="poster <%= product.image && !product.image.endsWith('.svg') ? '' : 'poster-v' + ((product.id % 6) + 1) %>">
+      <% if (product.image) { %>
+        <img src="/uploads/products/<%= product.image %>" alt="<%= product.title %>">
+      <% } else { %>
+        <div class="poster-glow poster-glow-1"></div>
+        <div class="poster-glow poster-glow-2"></div>
+        <div class="poster-grid"></div>
+        <div class="poster-top">
+          <span class="poster-brand"><span class="logo-mark small">A</span> AUREVON</span>
+        </div>
+        <div class="poster-mid">
+          <div class="poster-icon"><svg class="icon"><use href="#i-shield"/></svg></div>
+          <div class="poster-plan-label"><%= product.category_name || 'VPN SUBSCRIPTION' %></div>
+        </div>
+        <div class="poster-bottom">
+          <span>سرعت بالا • پایدار</span>
+          <span><%= (variants.length > 0 ? variants[0].price : product.price).toLocaleString('fa-IR') %> تومان</span>
+        </div>
+      <% } %>
+    </div>
+  </div>
+  <div>
+    <div class="pd-cat-row">
+      <% if (product.category_name) { %><span class="product-cat"><%= product.category_name %></span><% } %>
+    </div>
+    <h1 class="pd-title"><%= product.title %></h1>
+    <div class="pd-price-row">
+      <div class="pd-price" id="pdPrice">
+        <%= (variants.length > 0 ? variants[0].price : product.price).toLocaleString('fa-IR') %> تومان
+      </div>
+    </div>
+
+    <ul class="pd-features">
+      <li><svg class="icon"><use href="#i-check"/></svg> اتصال پرسرعت و پایدار</li>
+      <li><svg class="icon"><use href="#i-check"/></svg> بدون ثبت لاگ، حریم خصوصی کامل</li>
+      <li><svg class="icon"><use href="#i-check"/></svg> پشتیبانی ۲۴ ساعته</li>
+      <% if (product.stock > 0 || variants.length > 0) { %><li><svg class="icon"><use href="#i-check"/></svg> فعال‌سازی آنی پس از تایید پرداخت</li><% } %>
+    </ul>
+
+    <p class="pd-desc"><%= product.description || 'توضیحاتی برای این محصول ثبت نشده است.' %></p>
+
+    <form action="/cart/add" method="POST">
+      <input type="hidden" name="product_id" value="<%= product.id %>">
+
+      <% if (variants.length > 0) { %>
+        <p class="form-hint" style="margin-bottom:10px; font-weight:700; color:var(--text);">حجم / پلن مورد نظر را انتخاب کنید:</p>
+        <div class="variant-list">
+          <% variants.forEach((v, idx) => { %>
+            <label class="variant-option <%= idx === 0 ? 'selected' : '' %>" data-price="<%= v.price %>">
+              <span class="variant-option-label">
+                <input type="radio" name="variant_id" value="<%= v.id %>" <%= idx === 0 ? 'checked' : '' %> onchange="selectVariant(this)">
+                <%= v.label %>
+              </span>
+              <span class="variant-option-price"><%= v.price.toLocaleString('fa-IR') %> تومان</span>
+            </label>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <div class="pd-actions">
+        <input type="number" name="quantity" value="1" min="1" class="qty-input" required>
+        <button type="submit" class="btn btn-primary btn-lg"><svg class="icon"><use href="#i-cart"/></svg> افزودن به سبد خرید</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function selectVariant(input) {
+  document.querySelectorAll('.variant-option').forEach(el => el.classList.remove('selected'));
+  const label = input.closest('.variant-option');
+  label.classList.add('selected');
+  const price = Number(label.getAttribute('data-price'));
+  document.getElementById('pdPrice').textContent = price.toLocaleString('fa-IR') + ' تومان';
+}
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,150 @@
+<%- include('partials/header', { activeNav: 'home' }) %>
+
+<div class="hero reveal">
+  <% if (banner.image) { %>
+    <img src="/uploads/banners/<%= banner.image %>" class="hero-bg-img" alt="">
+  <% } %>
+  <div class="hero-content">
+    <span class="hero-eyebrow"><svg class="icon"><use href="#i-bolt"/></svg> اینترنت بدون مرز</span>
+    <h1><%= banner.title %></h1>
+    <% if (banner.subtitle) { %><p><%= banner.subtitle %></p><% } %>
+    <div class="hero-cta-row">
+      <a href="/?cat=vpn#products" class="btn btn-primary btn-lg"><svg class="icon"><use href="#i-cart"/></svg> خرید اشتراک</a>
+      <a href="#products" class="btn btn-outline btn-lg">مشاهده اشتراک‌ها</a>
+    </div>
+    <% if (banner.priceText) { %><span class="hero-price-badge"><svg class="icon"><use href="#i-tag"/></svg> <%= banner.priceText %></span><% } %>
+    <div class="hero-stats">
+      <div class="hero-stat"><b>+<%= products.length %></b><span>پلن فعال</span></div>
+      <div class="hero-stat"><b>۲۴/۷</b><span>پشتیبانی</span></div>
+      <div class="hero-stat"><b>۹۹.۹٪</b><span>پایداری اتصال</span></div>
+    </div>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="hero-ring hero-ring-1"></div>
+    <div class="hero-ring hero-ring-2"></div>
+    <div class="hero-orb"></div>
+    <div class="hero-cube hero-cube-1">
+      <span class="face"></span><span class="face"></span><span class="face"></span>
+    </div>
+    <div class="hero-cube hero-cube-2">
+      <span class="face"></span><span class="face"></span><span class="face"></span>
+    </div>
+    <div class="hero-card-3d">
+      <div class="hero-card-chip"></div>
+      <span class="card-shield"><svg class="icon"><use href="#i-shield"/></svg></span>
+      <span class="card-bottom-line">AUREVON • SECURE</span>
+    </div>
+  </div>
+</div>
+
+<div class="feature-grid">
+  <div class="feature-card reveal">
+    <div class="feature-icon"><svg class="icon"><use href="#i-bolt"/></svg></div>
+    <h3>سرعت بالا</h3>
+    <p>اتصال پرسرعت برای گیمینگ، استریم و کارهای روزمره بدون افت سرعت.</p>
+  </div>
+  <div class="feature-card reveal">
+    <div class="feature-icon"><svg class="icon"><use href="#i-lock"/></svg></div>
+    <h3>امنیت کامل</h3>
+    <p>رمزنگاری قوی و بدون ثبت لاگ، حریم خصوصی شما همیشه محفوظ می‌ماند.</p>
+  </div>
+  <div class="feature-card reveal">
+    <div class="feature-icon"><svg class="icon"><use href="#i-headset"/></svg></div>
+    <h3>پشتیبانی ۲۴ ساعته</h3>
+    <p>تیم پشتیبانی همیشه در دسترس برای پاسخ‌گویی سریع به سوالات شما.</p>
+  </div>
+  <div class="feature-card reveal">
+    <div class="feature-icon"><svg class="icon"><use href="#i-signal"/></svg></div>
+    <h3>پایداری بالا</h3>
+    <p>اتصال پایدار حتی در ساعات پرترافیک، بدون قطعی‌های آزاردهنده.</p>
+  </div>
+</div>
+
+<div id="products" class="section-head reveal">
+  <div>
+    <h2 class="section-title"><svg class="icon"><use href="#i-shop"/></svg> اشتراک‌های VPN</h2>
+    <p class="section-sub">حجم، مدت اعتبار و قیمت مناسب خودتون رو از بین پلن‌های زیر انتخاب کنید.</p>
+  </div>
+</div>
+
+<div class="cat-chips reveal">
+  <a href="/" class="cat-chip <%= !activeCat ? 'active' : '' %>">همه محصولات</a>
+  <% categories.forEach(cat => { %>
+    <a href="/?cat=<%= cat.slug %>" class="cat-chip <%= activeCat === cat.slug ? 'active' : '' %>"><%= cat.name %></a>
+  <% }) %>
+</div>
+
+<form class="shop-toolbar reveal" action="/" method="GET">
+  <% if (activeCat) { %><input type="hidden" name="cat" value="<%= activeCat %>"><% } %>
+  <% if (typeof sort !== 'undefined' && sort) { %><input type="hidden" name="sort" value="<%= sort %>"><% } %>
+  <div class="toolbar-search">
+    <svg class="icon"><use href="#i-search"/></svg>
+    <input type="text" name="q" placeholder="جستجوی پلن یا سرویس..." value="<%= typeof q !== 'undefined' ? q : '' %>">
+  </div>
+  <div class="toolbar-group">
+    <svg class="icon"><use href="#i-sort"/></svg>
+    <select class="toolbar-select" name="sort" data-shop-sort>
+      <option value="newest" <%= (typeof sort === 'undefined' || sort === 'newest') ? 'selected' : '' %>>جدیدترین</option>
+      <option value="popular" <%= typeof sort !== 'undefined' && sort === 'popular' ? 'selected' : '' %>>محبوب‌ترین</option>
+      <option value="price_asc" <%= typeof sort !== 'undefined' && sort === 'price_asc' ? 'selected' : '' %>>ارزان‌ترین</option>
+      <option value="price_desc" <%= typeof sort !== 'undefined' && sort === 'price_desc' ? 'selected' : '' %>>گران‌ترین</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-outline btn-sm"><svg class="icon"><use href="#i-filter"/></svg> اعمال فیلتر</button>
+</form>
+
+<% if (products.length === 0) { %>
+  <div class="empty-state reveal">
+    <div class="empty-icon"><svg class="icon"><use href="#i-box"/></svg></div>
+    <p>محصولی یافت نشد.</p>
+  </div>
+<% } else { %>
+  <div class="product-grid">
+    <% products.forEach((p, idx) => {
+      const variant = (idx % 6) + 1;
+      const posterIcon = p.category_slug === 'vpn' ? 'i-shield' : 'i-box';
+    %>
+      <a href="/product/<%= p.slug %>" class="product-card reveal">
+        <% if (p.isBestseller || p.isFeatured) { %>
+          <div class="product-badges">
+            <% if (p.isBestseller) { %><span class="p-badge p-badge-best"><svg class="icon"><use href="#i-star"/></svg> پرفروش‌ترین</span><% } %>
+            <% if (p.isFeatured) { %><span class="p-badge p-badge-featured"><svg class="icon"><use href="#i-bolt"/></svg> ویژه</span><% } %>
+          </div>
+        <% } %>
+        <div class="poster <%= p.image && !p.image.endsWith('.svg') ? '' : 'poster-v' + variant %>">
+          <% if (p.image) { %>
+            <img src="/uploads/products/<%= p.image %>" alt="<%= p.title %>">
+          <% } else { %>
+            <div class="poster-glow poster-glow-1"></div>
+            <div class="poster-glow poster-glow-2"></div>
+            <div class="poster-grid"></div>
+            <div class="poster-top">
+              <span class="poster-brand"><span class="logo-mark small">A</span> AUREVON</span>
+            </div>
+            <div class="poster-mid">
+              <div class="poster-icon"><svg class="icon"><use href="#<%= posterIcon %>"/></svg></div>
+              <div class="poster-plan-label"><%= p.category_name || 'PREMIUM' %></div>
+            </div>
+            <div class="poster-bottom">
+              <span>PREMIUM • SECURE</span>
+              <% if (p.hasVariants) { %><span><%= p.category_name ? '' : '' %>چندپلن</span><% } %>
+            </div>
+          <% } %>
+        </div>
+        <div class="product-info">
+          <% if (p.category_name) { %><span class="product-cat"><%= p.category_name %></span><% } %>
+          <p class="product-title"><%= p.title %></p>
+          <div class="product-price-row">
+            <% if (p.hasVariants) { %><span class="product-price-label">شروع از</span><% } %>
+            <span class="product-price"><%= p.displayPrice.toLocaleString('fa-IR') %> تومان</span>
+          </div>
+        </div>
+        <div class="product-actions">
+          <span class="btn btn-outline btn-sm">مشاهده و خرید</span>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>

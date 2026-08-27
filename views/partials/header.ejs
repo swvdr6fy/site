@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' | ' + shopName : shopName %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script>
+    // جلوگیری از چشمک زدن صفحه هنگام بارگذاری تم ذخیره‌شده
+    (function () {
+      try {
+        var t = localStorage.getItem('af-theme');
+        document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <%- include('icons') %>
+
+  <div class="bg-fx" aria-hidden="true">
+    <div class="mesh-grid"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+    <div class="grain"></div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <span class="logo-mark">A</span>
+        <span class="logo-text"><%= shopName %></span>
+      </a>
+
+      <nav class="main-nav">
+        <a href="/" class="<%= typeof activeNav !== 'undefined' && activeNav === 'home' ? 'current' : '' %>"><svg class="icon"><use href="#i-home"/></svg> خانه</a>
+        <a href="/?cat=vpn" class="<%= typeof activeCat !== 'undefined' && activeCat === 'vpn' ? 'current' : '' %>"><svg class="icon"><use href="#i-shop"/></svg> فروشگاه</a>
+        <a href="/#products"><svg class="icon"><use href="#i-shield"/></svg> سرویس‌ها</a>
+        <a href="/#products"><svg class="icon"><use href="#i-book"/></svg> راهنما</a>
+        <a href="/#footer-support"><svg class="icon"><use href="#i-headset"/></svg> پشتیبانی</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="icon-btn theme-switch" data-theme-toggle aria-label="تغییر تم روشن/تاریک">
+          <span class="icon-sun"><svg class="icon"><use href="#i-sun"/></svg></span>
+          <span class="icon-moon"><svg class="icon"><use href="#i-moon"/></svg></span>
+        </button>
+
+        <a href="/cart" class="icon-btn cart-link" aria-label="سبد خرید">
+          <svg class="icon"><use href="#i-cart"/></svg>
+          <% if (cartCount > 0) { %><span class="cart-badge"><%= cartCount %></span><% } %>
+        </a>
+
+        <% if (currentUser) { %>
+          <div class="user-menu">
+            <a href="#" class="user-name">
+              <span class="user-avatar"><%= currentUser.name ? currentUser.name.charAt(0) : '?' %></span>
+            </a>
+            <div class="user-dropdown">
+              <a href="/orders"><svg class="icon"><use href="#i-package"/></svg> سفارش‌های من</a>
+              <% if (currentUser.is_admin) { %>
+                <a href="/admin"><svg class="icon"><use href="#i-dashboard"/></svg> پنل مدیریت</a>
+              <% } %>
+              <form action="/logout" method="POST"><button type="submit"><svg class="icon"><use href="#i-close"/></svg> خروج</button></form>
+            </div>
+          </div>
+        <% } else { %>
+          <a href="/login" class="btn-nav">ورود</a>
+          <a href="/register" class="btn-nav btn-nav-primary">ثبت‌نام</a>
+        <% } %>
+
+        <button type="button" class="nav-toggle" aria-label="باز کردن منو" aria-expanded="false">
+          <svg class="icon"><use href="#i-menu"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    <% if (flash) { %>
+      <div class="flash flash-<%= flash.type %>">
+        <svg class="icon"><use href="#<%= flash.type === 'success' ? 'i-check-circle' : 'i-alert' %>"/></svg>
+        <%= flash.text %>
+      </div>
+    <% } %>

@@ -1,0 +1,59 @@
+<%- include('partials/header') %>
+
+<h1 class="page-title reveal" style="margin-bottom:20px;">جزئیات سفارش #<%= order.id %></h1>
+
+<div class="checkout-grid reveal">
+  <div>
+    <div class="table-wrap reveal">
+      <table class="data-table">
+        <thead><tr><th>محصول</th><th>قیمت</th><th>تعداد</th><th>جمع</th></tr></thead>
+        <tbody>
+          <% items.forEach(item => { %>
+            <tr>
+              <td><%= item.title_snapshot %></td>
+              <td><%= item.price.toLocaleString('fa-IR') %></td>
+              <td><%= item.quantity %></td>
+              <td><%= (item.price * item.quantity).toLocaleString('fa-IR') %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if (order.receipt_image) { %>
+      <h2 class="section-title">رسید پرداخت</h2>
+      <img src="/uploads/receipts/<%= order.receipt_image %>" style="max-width:320px; border-radius:12px; border:1px solid var(--card-border);">
+    <% } %>
+
+    <% if (order.config_text) { %>
+      <h2 class="section-title">کانفیگ / اطلاعات تحویلی شما</h2>
+      <pre style="white-space:pre-wrap; word-break:break-all; background:var(--card-bg,rgba(255,255,255,.04)); border:1px solid var(--card-border); border-radius:12px; padding:14px; font-family:inherit;"><%= order.config_text %></pre>
+    <% } %>
+
+    <% if (order.admin_note) { %>
+      <h2 class="section-title">یادداشت فروشگاه</h2>
+      <p style="color:var(--text-dim);"><%= order.admin_note %></p>
+    <% } %>
+  </div>
+
+  <div class="summary-box">
+    <h3 style="margin-top:0;">وضعیت سفارش</h3>
+    <p><span class="badge badge-<%= order.status === 'در انتظار پرداخت' ? 'awaiting' : order.status === 'در انتظار تایید پرداخت' ? 'pending' : order.status === 'پرداخت تایید شد' ? 'confirmed' : order.status === 'در حال پردازش' ? 'processing' : order.status === 'ارسال شد' ? 'shipped' : order.status === 'تحویل داده شد' ? 'delivered' : 'rejected' %>"><%= order.status %></span></p>
+    <% if (order.status === 'در انتظار پرداخت') { %>
+      <a href="/checkout/pay/<%= order.id %>" class="btn btn-primary btn-block" style="margin:10px 0;">ادامه پرداخت</a>
+    <% } %>
+    <% if (order.tracking_code) { %>
+      <p><strong>کد پیگیری پستی:</strong><br><%= order.tracking_code %></p>
+    <% } %>
+    <hr style="border-color:var(--card-border); margin:16px 0;">
+    <p><strong>گیرنده:</strong> <%= order.full_name %></p>
+    <p><strong>موبایل:</strong> <%= order.phone %></p>
+    <% if (order.postal_code) { %><p><strong>کد پستی:</strong> <%= order.postal_code %></p><% } %>
+    <% if (order.province || order.city) { %><p><strong>استان/شهر:</strong> <%= [order.province, order.city].filter(Boolean).join(' / ') %></p><% } %>
+    <% if (order.address) { %><p><strong>آدرس دقیق:</strong> <%= order.address %></p><% } %>
+    <p><strong>تاریخ ثبت:</strong> <%= order.created_at %></p>
+    <p style="font-size:20px; font-weight:900; margin-top:14px;">جمع کل: <%= order.total_price.toLocaleString('fa-IR') %> تومان</p>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

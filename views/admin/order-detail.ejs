@@ -1,0 +1,71 @@
+<%- include('../partials/header') %>
+
+<h1 class="page-title" style="margin-bottom:20px;">سفارش #<%= order.id %></h1>
+<%- include('_tabs', { active: 'orders' }) %>
+
+<div class="checkout-grid">
+  <div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>محصول</th><th>قیمت</th><th>تعداد</th><th>جمع</th></tr></thead>
+        <tbody>
+          <% items.forEach(item => { %>
+            <tr>
+              <td><%= item.title_snapshot %></td>
+              <td><%= item.price.toLocaleString('fa-IR') %></td>
+              <td><%= item.quantity %></td>
+              <td><%= (item.price * item.quantity).toLocaleString('fa-IR') %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if (order.receipt_image) { %>
+      <h2 class="section-title">رسید پرداخت مشتری</h2>
+      <a href="/uploads/receipts/<%= order.receipt_image %>" target="_blank">
+        <img src="/uploads/receipts/<%= order.receipt_image %>" style="max-width:320px; border-radius:12px; border:1px solid var(--card-border);">
+      </a>
+    <% } %>
+
+    <h2 class="section-title">به‌روزرسانی سفارش</h2>
+    <form action="/admin/orders/<%= order.id %>/update" method="POST" class="form-card" style="max-width:none;">
+      <div class="form-group">
+        <label>وضعیت سفارش</label>
+        <select name="status">
+          <% statuses.forEach(s => { %>
+            <option value="<%= s %>" <%= order.status === s ? 'selected' : '' %>><%= s %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>کد پیگیری پستی</label>
+        <input type="text" name="tracking_code" value="<%= order.tracking_code || '' %>" placeholder="مثلا: 1234567890123">
+      </div>
+      <div class="form-group">
+        <label>کانفیگ / اطلاعات تحویلی (برای سفارش‌های VPN)</label>
+        <textarea name="config_text" placeholder="متن کانفیگ یا لینک اشتراک را اینجا وارد کنید تا در صفحه سفارش مشتری نمایش داده شود..." dir="ltr" style="font-family:monospace;"><%= order.config_text || '' %></textarea>
+      </div>
+      <div class="form-group">
+        <label>یادداشت برای مشتری (اختیاری)</label>
+        <textarea name="admin_note"><%= order.admin_note || '' %></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">ذخیره تغییرات</button>
+    </form>
+  </div>
+
+  <div class="summary-box">
+    <h3 style="margin-top:0;">اطلاعات مشتری</h3>
+    <p><strong>نام:</strong> <%= order.user_name %></p>
+    <p><strong>گیرنده:</strong> <%= order.full_name %></p>
+    <p><strong>موبایل:</strong> <%= order.phone %></p>
+    <% if (order.postal_code) { %><p><strong>کد پستی:</strong> <%= order.postal_code %></p><% } %>
+    <% if (order.province || order.city) { %><p><strong>استان/شهر:</strong> <%= [order.province, order.city].filter(Boolean).join(' / ') %></p><% } %>
+    <% if (order.address) { %><p><strong>آدرس دقیق:</strong> <%= order.address %></p><% } %>
+    <p><strong>تاریخ ثبت:</strong> <%= order.created_at %></p>
+    <hr style="border-color:var(--card-border); margin:16px 0;">
+    <p style="font-size:20px; font-weight:900;">جمع کل: <%= order.total_price.toLocaleString('fa-IR') %> تومان</p>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

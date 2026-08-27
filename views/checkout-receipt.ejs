@@ -1,0 +1,27 @@
+<%- include('partials/header') %>
+
+<h1 class="page-title" style="margin-bottom:14px; text-align:center;">آپلود رسید پرداخت</h1>
+
+<div class="steps">
+  <div class="step done"><span class="step-dot">✓</span> اطلاعات گیرنده</div>
+  <div class="step-sep"></div>
+  <div class="step done"><span class="step-dot">✓</span> پرداخت</div>
+  <div class="step-sep"></div>
+  <div class="step active"><span class="step-dot">۳</span> ثبت رسید</div>
+</div>
+
+<p class="form-hint" style="text-align:center; margin-bottom:24px;">سفارش #<%= order.id %> - مبلغ <%= order.total_price.toLocaleString('fa-IR') %> تومان</p>
+
+<% if (error) { %><div class="flash flash-error" style="max-width:420px; margin:0 auto 16px;"><%= error %></div><% } %>
+
+<form action="/checkout/receipt/<%= order.id %>" method="POST" enctype="multipart/form-data" class="form-card">
+  <div class="form-group">
+    <label>تصویر رسید پرداخت را انتخاب کنید</label>
+    <input type="file" name="receipt" accept="image/*" required>
+    <p class="form-hint">فرمت مجاز: jpg, png, webp - حداکثر حجم ۴ مگابایت</p>
+  </div>
+  <button type="submit" class="btn btn-primary btn-block">ثبت نهایی رسید</button>
+  <a href="/checkout/pay/<%= order.id %>" class="btn btn-outline btn-block" style="margin-top:10px;">بازگشت به صفحه پرداخت</a>
+</form>
+
+<%- include('partials/footer') %>

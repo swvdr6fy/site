@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+
+<h1 class="page-title" style="margin-bottom:20px;">پنل مدیریت</h1>
+<%- include('_tabs', { active: 'dashboard' }) %>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">تعداد محصولات</div>
+    <div class="stat-value"><%= stats.productsCount %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">تعداد سفارش‌ها</div>
+    <div class="stat-value"><%= stats.ordersCount %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">در انتظار تایید پرداخت</div>
+    <div class="stat-value"><%= stats.pendingOrders %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">تعداد کاربران</div>
+    <div class="stat-value"><%= stats.usersCount %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">مجموع فروش</div>
+    <div class="stat-value"><%= stats.totalRevenue.toLocaleString('fa-IR') %></div>
+  </div>
+</div>
+
+<h2 class="section-title">آخرین سفارش‌ها</h2>
+<div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>شماره</th><th>مبلغ</th><th>وضعیت</th><th>تاریخ</th><th></th></tr></thead>
+    <tbody>
+      <% recentOrders.forEach(o => { %>
+        <tr>
+          <td>#<%= o.id %></td>
+          <td><%= o.total_price.toLocaleString('fa-IR') %> تومان</td>
+          <td><span class="badge badge-<%= o.status === 'در انتظار پرداخت' ? 'awaiting' : o.status === 'در انتظار تایید پرداخت' ? 'pending' : o.status === 'پرداخت تایید شد' ? 'confirmed' : o.status === 'در حال پردازش' ? 'processing' : o.status === 'ارسال شد' ? 'shipped' : o.status === 'تحویل داده شد' ? 'delivered' : 'rejected' %>"><%= o.status %></span></td>
+          <td><%= o.created_at %></td>
+          <td><a href="/admin/orders/<%= o.id %>" class="btn btn-outline btn-sm">مشاهده</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/footer') %>

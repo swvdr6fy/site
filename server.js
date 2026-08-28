@@ -11,6 +11,7 @@ const authRoutes = require('./routes/auth');
 const shopRoutes = require('./routes/shop');
 const adminRoutes = require('./routes/admin');
 const panelRoutes = require('./routes/panel');
+const seoRoutes = require('./routes/seo');
 
 seed();
 
@@ -24,6 +25,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(UPLOADS_DIR));
+
+app.use('/', seoRoutes);
 
 app.use(
   session({

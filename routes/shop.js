@@ -62,6 +62,10 @@ router.get('/', (req, res) => {
 
   res.render('index', {
     title: 'صفحه اصلی',
+    pageTitle: 'AurevonFilter | فروشگاه رسمی اروون فیلتر - اینترنت آزاد و VPN',
+    metaDescription:
+      'فروشگاه رسمی AurevonFilter (اروون فیلتر) — ارائه‌دهنده سرویس‌های VPN و اینترنت آزاد با پشتیبانی سریع و پرداخت امن. همین حالا اشتراک خود را تهیه کنید.',
+    canonicalUrl: 'https://aurevonfilter-shop.up.railway.app/',
     products,
     categories,
     activeCat: categorySlug,

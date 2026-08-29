@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+
+<h1 class="page-title" style="margin-bottom:20px;">بله‌پی</h1>
+<%- include('_tabs', { active: 'bale' }) %>
+
+<div class="form-card" style="max-width:640px;">
+  <p><strong>وضعیت:</strong>
+    <% if (enabled) { %>
+      <span class="badge badge-confirmed">فعال</span>
+    <% } else if (configured) { %>
+      <span class="badge badge-pending">تنظیم شده اما غیرفعال (BALE_PAY_ENABLED=false)</span>
+    <% } else { %>
+      <span class="badge badge-rejected">تنظیم نشده</span>
+    <% } %>
+  </p>
+
+  <% if (!configured) { %>
+    <p class="form-hint">
+      برای فعال‌سازی، متغیرهای محیطی <code>BALE_BOT_TOKEN</code>، <code>BALE_PROVIDER_TOKEN</code> و
+      <code>BALE_BOT_USERNAME</code> را (طبق راهنمای README) تنظیم کنید و سرور را دوباره اجرا کنید.
+    </p>
+  <% } %>
+
+  <% if (enabled) { %>
+    <hr style="margin:20px 0; border-color:#ffffff14;">
+    <h3 class="section-title" style="margin-bottom:10px;">وبهوک</h3>
+    <p class="form-hint">آدرس پایه (BASE_URL): <code><%= baseUrl || 'تنظیم نشده' %></code></p>
+    <p class="form-hint">رمز وبهوک (BALE_WEBHOOK_SECRET): <%= webhookSecretSet ? 'تنظیم شده ✅' : 'تنظیم نشده ❌' %></p>
+
+    <% if (webhookError) { %>
+      <div class="flash flash-error" style="margin:14px 0;">خطا در دریافت وضعیت وبهوک: <%= webhookError %></div>
+    <% } else if (webhookInfo) { %>
+      <pre style="background:#00000033; padding:12px; border-radius:8px; overflow:auto; font-size:12px;"><%= JSON.stringify(webhookInfo, null, 2) %></pre>
+    <% } %>
+
+    <form method="POST" action="/admin/bale/setup-webhook" style="margin-top:14px;">
+      <button type="submit" class="btn btn-primary">ثبت / به‌روزرسانی وبهوک</button>
+    </form>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

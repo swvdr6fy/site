@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+
+<h1 class="page-title" style="margin-bottom:14px; text-align:center;">اتصال حساب به بله</h1>
+
+<div style="max-width:420px; margin:0 auto;">
+  <% if (connected) { %>
+    <div class="flash flash-success" style="margin-bottom:16px;">حساب شما قبلا به بله متصل شده است ✅</div>
+    <a href="<%= returnTo %>" class="btn btn-primary btn-block">بازگشت</a>
+  <% } else { %>
+    <p class="form-hint" style="text-align:center; margin-bottom:20px;">
+      برای پرداخت با بله‌پی، ابتدا باید یک‌بار حساب فروشگاهی خود را به چت بله متصل کنید.
+      روی دکمه زیر بزنید تا اپلیکیشن بله باز شود و روی «شروع» بزنید.
+    </p>
+
+    <% if (deepLink) { %>
+      <a href="<%= deepLink %>" target="_blank" rel="noopener" class="btn btn-primary btn-block">🅱️ باز کردن بله و اتصال حساب</a>
+      <p class="form-hint" style="text-align:center; margin:14px 0;">
+        اگر دکمه بالا کار نکرد، در اپلیکیشن بله ربات فروشگاه را باز کنید و این کد را ارسال کنید:
+      </p>
+      <div class="pay-card-number" style="text-align:center; margin-bottom:16px;">/start <%= code %></div>
+    <% } else { %>
+      <div class="flash flash-error" style="margin-bottom:16px;">پرداخت با بله‌پی در حال حاضر تنظیم نشده است.</div>
+    <% } %>
+
+    <a href="<%= returnTo %>" class="btn btn-outline btn-block">حساب را متصل کردم، بازگشت</a>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

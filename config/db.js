@@ -92,6 +92,42 @@ CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY,
   value TEXT
 );
+
+-- اتصال حساب کاربری فروشگاه به چت بله (لازم برای ارسال فاکتور بله‌پی)
+CREATE TABLE IF NOT EXISTS bale_connections (
+  user_id INTEGER PRIMARY KEY,
+  chat_id TEXT NOT NULL,
+  bale_user_id TEXT,
+  username TEXT,
+  first_name TEXT,
+  connected_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- کدهای یک‌بارمصرف برای اتصال حساب به بله از طریق دستور /start
+CREATE TABLE IF NOT EXISTS bale_link_codes (
+  code TEXT PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  expires_at TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- فاکتورهای ارسال‌شده به بله‌پی برای هر سفارش
+CREATE TABLE IF NOT EXISTS bale_payments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  public_id TEXT UNIQUE NOT NULL,
+  order_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  chat_id TEXT NOT NULL,
+  amount_rial INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'sent',
+  charge_id TEXT UNIQUE,
+  expires_at TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 `);
 
 // مهاجرت ایمن برای دیتابیس‌های قدیمی‌تر (اگر ستون‌های جدید وجود نداشته باشند اضافه می‌شوند)

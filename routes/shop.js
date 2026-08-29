@@ -2,6 +2,7 @@ const express = require('express');
 const { db, getSetting } = require('../config/db');
 const { requireLogin } = require('../middleware/auth');
 const { uploadReceipt } = require('../utils/upload');
+const balePay = require('../utils/balePay');
 
 const router = express.Router();
 
@@ -257,12 +258,17 @@ router.get('/checkout/pay/:id', requireLogin, (req, res) => {
     return res.redirect(`/orders/${order.id}`);
   }
 
+  const balePayEnabled = balePay.isBalePayEnabled();
+  const baleConnected = balePayEnabled ? !!balePay.getConnection(req.session.user.id) : false;
+
   res.render('checkout-pay', {
     title: 'پرداخت سفارش',
     order,
     cardNumber: getSetting('card_number', '----'),
     cardHolder: getSetting('card_holder', '----'),
     cardBank: getSetting('card_bank', ''),
+    balePayEnabled,
+    baleConnected,
   });
 });
 

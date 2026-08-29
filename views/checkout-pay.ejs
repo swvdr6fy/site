@@ -15,6 +15,27 @@
   <div class="value"><%= order.total_price.toLocaleString('fa-IR') %> تومان</div>
 </div>
 
+<% if (balePayEnabled) { %>
+<div style="max-width:420px; margin: 0 auto 20px;">
+  <div class="pay-card" style="background:#00a99d10; border-color:#00a99d55;">
+    <div class="pay-card-label">🅱️ پرداخت آنلاین با بله‌پی</div>
+    <p class="form-hint" style="margin:6px 0 14px;">
+      پرداخت مستقیم و آنی از داخل اپلیکیشن بله. سفارش شما بلافاصله پس از پرداخت تایید می‌شود.
+    </p>
+    <% if (baleConnected) { %>
+      <form method="POST" action="/checkout/pay/<%= order.id %>/bale">
+        <button type="submit" class="btn btn-primary btn-block">پرداخت با بله‌پی</button>
+      </form>
+    <% } else { %>
+      <a href="/bale/connect?returnTo=<%= encodeURIComponent('/checkout/pay/' + order.id) %>" class="btn btn-primary btn-block">
+        اتصال حساب به بله و پرداخت
+      </a>
+    <% } %>
+  </div>
+  <div style="text-align:center; margin:16px 0; color:#888; font-size:13px;">— یا با کارت به کارت پرداخت کنید —</div>
+</div>
+<% } %>
+
 <div class="pay-card">
   <div class="pay-card-label">💳 شماره کارت مقصد</div>
   <div class="pay-card-number" id="cardNumberText"><%= cardNumber %></div>

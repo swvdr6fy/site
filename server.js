@@ -12,6 +12,7 @@ const shopRoutes = require('./routes/shop');
 const adminRoutes = require('./routes/admin');
 const panelRoutes = require('./routes/panel');
 const seoRoutes = require('./routes/seo');
+const baleRoutes = require('./routes/bale');
 
 seed();
 
@@ -44,6 +45,7 @@ app.use(attachUser);
 
 app.use('/', panelRoutes);
 app.use('/', authRoutes);
+app.use('/', baleRoutes);
 app.use('/', shopRoutes);
 app.use('/admin', adminRoutes);
 

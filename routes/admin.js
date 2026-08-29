@@ -4,6 +4,8 @@ const { requireLogin, requireAdmin } = require('../middleware/auth');
 const { uploadProductImage, uploadBanner } = require('../utils/upload');
 const { generateProductPoster } = require('../utils/poster');
 const { slugify } = require('../config/seed');
+const baleApi = require('../utils/baleApi');
+const balePay = require('../utils/balePay');
 
 const router = express.Router();
 router.use(requireLogin, requireAdmin);
@@ -50,6 +52,46 @@ router.get('/', (req, res) => {
   };
   const recentOrders = db.prepare('SELECT * FROM orders ORDER BY created_at DESC LIMIT 8').all();
   res.render('admin/dashboard', { title: 'پنل مدیریت', stats, recentOrders });
+});
+
+// ---------- بله‌پی ----------
+router.get('/bale', async (req, res) => {
+  let webhookInfo = null;
+  let webhookError = null;
+  if (balePay.isBalePayEnabled()) {
+    try {
+      webhookInfo = await baleApi.getWebhookInfo();
+    } catch (err) {
+      webhookError = err.message;
+    }
+  }
+  res.render('admin/bale', {
+    title: 'بله‌پی',
+    active: 'bale',
+    enabled: balePay.isBalePayEnabled(),
+    configured: baleApi.isConfigured(),
+    baseUrl: process.env.BASE_URL || '',
+    webhookSecretSet: !!process.env.BALE_WEBHOOK_SECRET,
+    webhookInfo,
+    webhookError,
+  });
+});
+
+router.post('/bale/setup-webhook', async (req, res) => {
+  const baseUrl = process.env.BASE_URL || '';
+  const secret = process.env.BALE_WEBHOOK_SECRET || '';
+  if (!baseUrl || !secret) {
+    req.session.flash = { type: 'error', text: 'ابتدا BASE_URL و BALE_WEBHOOK_SECRET را در متغیرهای محیطی تنظیم کنید.' };
+    return res.redirect('/admin/bale');
+  }
+  try {
+    const url = `${baseUrl.replace(/\/$/, '')}/webhook/bale/${secret}`;
+    await baleApi.setWebhook(url);
+    req.session.flash = { type: 'success', text: 'وبهوک بله با موفقیت ثبت شد.' };
+  } catch (err) {
+    req.session.flash = { type: 'error', text: 'ثبت وبهوک ناموفق بود: ' + err.message };
+  }
+  res.redirect('/admin/bale');
 });
 
 // ---------- محصولات ----------
